@@ -1,11 +1,11 @@
 import React, { createContext, useState, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
+import { firestore } from './firebase/firebase-utils'
 
 const SocketContext = createContext();
 
-// const socket = io('http://localhost:5000');
-const socket = io('https://warm-wildwood-81069.herokuapp.com');
+const socket = io('http://localhost:5000');
 
 const ContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);
@@ -37,11 +37,16 @@ const ContextProvider = ({ children }) => {
   const answerCall = () => {
     setCallAccepted(true);
 
+    storeIdInFirebase(call.from, me)
+
     const peer = new Peer({ initiator: false, trickle: false, stream });
 
     peer.on('signal', (data) => {
       socket.emit('answerCall', { signal: data, to: call.from });
     });
+
+
+    console.log(`recieved call from ${call.from}`);
 
     peer.on('stream', (currentStream) => {
       userVideo.current.srcObject = currentStream;
@@ -63,9 +68,10 @@ const ContextProvider = ({ children }) => {
       userVideo.current.srcObject = currentStream;
     });
 
+    console.log(`sent a call request to ${id}`)
+
     socket.on('callAccepted', (signal) => {
       setCallAccepted(true);
-
       peer.signal(signal);
     });
 
@@ -79,6 +85,13 @@ const ContextProvider = ({ children }) => {
 
     window.location.reload();
   };
+
+  const storeIdInFirebase = (sender, reciever) => {
+    firestore.collection('Calls').doc().set({
+      reciever: reciever,
+      sender: sender
+    })
+  }
 
   return (
     <SocketContext.Provider value={{
