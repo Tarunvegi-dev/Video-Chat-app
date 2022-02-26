@@ -1,11 +1,24 @@
-# Realtime Chat Application
+## Web-rtc based video call system for peer to peer (2 people)
 
-![Video Chat](https://i.ibb.co/7WZRLD1/122.jpg)
+This is video chat application where 2 people can connect using their socket id.
 
-## Introduction
-This is a code repository for the corresponding video tutorial. 
+## Instructions
 
-In this tutorial, we're going to build and deploy a React Video Chat Application using WebRTC.
+### clone the package
 
-Setup:
-- run ```npm i && npm start``` for both client and server side to start the development server
+### Run npm install in root folder to download all packages for server side code
+
+### change directory to client and run npm install again to download the packages for client side
+
+### Run npm start in client folder to run react app
+
+### Run 'nodemon index.js' in root folder to start backend server
+
+### And that's it!
+
+## Thank You
+
+
+
+
+
